@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Picker } from 'react-native';
-import { Button, Icon, Input } from 'react-native-elements';
+import { Button, Icon, Input, Avatar } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { employeeUpdate } from '../actions';
 
@@ -8,8 +8,16 @@ class EmployeeForm extends Component {
   render() {
     return (
       <View>
+      <View>
+        <Avatar
+          rounded
+          icon = {{name:'person'}}
+          showEditButton
+        />
+      </View>
+      <View>
           <Input
-            label="Name"
+            label="First Name"
             placeholder="Jane"
             value={this.props.name}
             onChangeText={value => this.props.employeeUpdate({prop:'name', value})}
@@ -21,6 +29,13 @@ class EmployeeForm extends Component {
               />
             }
           />
+          <Input 
+            label = "Last Name"
+            placeholder = 'Doe'
+            value = {this.props.lastName}
+            onChangeText = {value => this.props.employeeUpdate({prop:'lastName', value})}
+          />
+      </View>
           <Input
             keyboardType = 'numeric'
             label="Phone"

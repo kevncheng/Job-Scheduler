@@ -17,9 +17,9 @@ class EditEmployeeScreen extends Component {
 // }
 
   onButtonPress() {
-    const { name, phone, shift } = this.props;
+    const { name, lastName, phone, shift } = this.props;
     const employeeParam = this.props.navigation.getParam('employeeInfo')
-    this.props.employeeSave({ name, phone, shift, uid: employeeParam.uid },
+    this.props.employeeSave({ name, lastName, phone, shift, uid: employeeParam.uid },
       () => {
         this.props.navigation.goBack()
       });
@@ -66,9 +66,9 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  const {name , phone, shift } = state.employeeForm;
+  const {name ,lastName, phone, shift } = state.employeeForm;
 
-  return {name,phone,shift}
+  return {name,lastName,phone,shift}
 };
 
 export default connect(mapStateToProps,{ employeeUpdate, employeeSave, employeeEdit, employeeDelete })(EditEmployeeScreen);

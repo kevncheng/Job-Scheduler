@@ -16,13 +16,18 @@ class EmployeeList extends Component {
   }
 
   render() {
-    const { name, shift } = this.props.employee;
+    const { name, lastName, shift } = this.props.employee;
 
     return (
       <TouchableOpacity
         onPress={this.onRowPress.bind(this)}
       >
-        <ListItem title={name} subtitle={shift} />
+        <ListItem 
+        title={`${name} ${lastName}`} 
+        subtitle={shift} 
+        chevron
+          
+        />
 
         <Divider style={{ backgroundColor: "grey" }} />
       </TouchableOpacity>

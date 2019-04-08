@@ -12,3 +12,7 @@ export const EMPLOYEE_CREATE = 'employee_create';
 export const EMPLOYEES_FETCH_SUCCESS = 'employees_fetch_success';
 export const EMPLOYEE_SAVE_SUCCESS = 'employee_save_success';
 export const EMPLOYEE_EDIT = 'employee_edit';
+
+export const ANNOUNCEMENT_UPDATE = 'announcement_update';
+export const ANNOUNCEMENT_SAVE = 'announcement_save';
+export const ANNOUNCEMENT_DELETE = 'announcement_delete';

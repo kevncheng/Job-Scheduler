@@ -37,6 +37,14 @@ const AppContainer = createAppContainer(MainNavigator);
 
 export default class App extends React.Component {
   componentWillMount() {
+    const config = {
+      apiKey: "AIzaSyDrBi9lwNVUsif1BJhl-F49rXCtMD289ys",
+      authDomain: "manager-468a0.firebaseapp.com",
+      databaseURL: "https://manager-468a0.firebaseio.com",
+      projectId: "manager-468a0",
+      storageBucket: "manager-468a0.appspot.com",
+      messagingSenderId: "768975716246"
+    };
     firebase.initializeApp(config);
   }
   render() {

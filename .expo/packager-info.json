@@ -1,10 +1,10 @@
 {
-  "expoServerPort": null,
+  "expoServerPort": 19000,
   "webpackServerPort": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
-  "packagerPort": null,
-  "packagerPid": null,
+  "expoServerNgrokUrl": "https://ia-5fm.anonymous.jobscheduler.exp.direct",
+  "packagerNgrokUrl": "https://packager.ia-5fm.anonymous.jobscheduler.exp.direct",
+  "ngrokPid": 25784,
+  "packagerPort": 19001,
+  "packagerPid": 3112,
   "devToolsPort": 19002
 }

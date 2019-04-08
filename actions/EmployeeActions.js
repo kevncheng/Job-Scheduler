@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import { NavigationActions } from 'react-navigation';
 
 import {
   EMPLOYEE_UPDATE,
@@ -25,12 +24,12 @@ export const employeeUpdate = ({ prop, value }) => {
   };
 };
 
-export const employeeCreate = ({ name, phone, shift },callback) => {
+export const employeeCreate = ({ name,lastName, phone, shift },callback) => {
   const { currentUser } = firebase.auth();
 
   return (dispatch) => {
     firebase.database().ref(`/users/${currentUser.uid}/employees`)
-      .push({ name, phone, shift })
+      .push({ name, lastName, phone, shift })
       .then(() => {
         createUser(dispatch,callback);
       });
@@ -54,12 +53,12 @@ export const employeesFetch = () => {
   };
 };
 
-export const employeeSave = ({ name, phone, shift, uid },callback) => {
+export const employeeSave = ({ name,lastName, phone, shift, uid },callback) => {
   const { currentUser } = firebase.auth();
 
   return (dispatch) => {
     firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
-      .set({ name, phone, shift })
+      .set({ name,lastName, phone, shift })
       .then(() => {
         dispatch({ type: EMPLOYEE_SAVE_SUCCESS });
         callback();

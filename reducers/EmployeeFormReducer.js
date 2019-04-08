@@ -6,6 +6,7 @@ import {
   
   const INITIAL_STATE = {
     name: '',
+    lastName: '',
     phone: '',
     shift: ''
   };

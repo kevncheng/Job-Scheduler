@@ -7,9 +7,15 @@ import { employeesFetch } from '../actions';
 import _ from 'lodash';
 
 class EmployeeScreen extends Component {
+  constructor(props) {
+    super(props)
+    state = ({
+      serach: '',
+      isLoading: false
+    })
+  }
   componentWillMount() {
     this.props.employeesFetch();
-
     this.createDataSource(this.props);
 
   }
@@ -53,12 +59,13 @@ class EmployeeScreen extends Component {
     return (
       <ScrollView>
       <SearchBar
-          placeholder="Search Employees"
+        lightTheme
+        placeholder="Search Employees"
         />
       <ListView
-      enableEmptySections
-      dataSource={this.dataSource}
-      renderRow={this.renderRow}
+        enableEmptySections
+        dataSource={this.dataSource}
+        renderRow={this.renderRow}
       />
       </ScrollView>
     );

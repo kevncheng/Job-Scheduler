@@ -1,14 +1,18 @@
 import { combineReducers } from 'redux';
 import AuthReducer from './AuthReducer';
 import FbReducer from './FacebookAuthReducer';
+
 import EmployeeFormReducer from './EmployeeFormReducer';
 import EmployeeReducer from './EmployeeReducer';
 import EmployeeEditReducer from './EmployeeEditReducer';
+
+import AnnouncementReducer from './AnnouncementReducer';
 
 export default combineReducers({
   auth: AuthReducer,
   fb_auth: FbReducer,
   employeeForm: EmployeeFormReducer,
   employees: EmployeeReducer,
-  selectedEmployee: EmployeeEditReducer
+  selectedEmployee: EmployeeEditReducer,
+  announcement: AnnouncementReducer
 })
