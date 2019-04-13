@@ -1,39 +1,92 @@
-import React from 'react';
-import { StyleSheet, Text, View,AsyncStorage } from 'react-native';
-import { Provider } from 'react-redux';
-import store from './store'
+import React from "react";
+import { AsyncStorage } from "react-native";
+import { Provider } from "react-redux";
+import store from "./store";
+import firebase from 'firebase'
 
-import { createStackNavigator, createAppContainer,createBottomTabNavigator, createSwitchNavigator } from 'react-navigation';
-import WelcomeScreen from './screens/WelcomeScreen';
-import AuthScreen from './screens/AuthScreen';
-import HomeScreen from './screens/HomeScreen';
-import FbAuthScreen from './screens/FacebookLoginScreen';
-import EmployeeScreen from './screens/EmployeeScreen';
-import AddEmployeeScreen from './screens/AddEmployeeScreen';
-import EditEmployeeScreen from './screens/EditEmployeeScreen';
-import ScheduleScreen from './screens/ScheduleScreen';
+import {
+  createStackNavigator,
+  createAppContainer,
+  createBottomTabNavigator,
+  createSwitchNavigator,
+  createDrawerNavigator
+} from "react-navigation";
 
-import firebase from 'firebase';
-import config from './util/keys';
+import WelcomeScreen from "./screens/WelcomeScreen";
+import AuthScreen from "./screens/AuthScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import HomeScreen from "./screens/HomeScreen";
+import EmployeeScreen from "./screens/EmployeeScreen";
+import AddEmployeeScreen from "./screens/AddEmployeeScreen";
+import EditEmployeeScreen from "./screens/EditEmployeeScreen";
+import ScheduleScreen from "./screens/ScheduleScreen";
 
-const MainNavigator = createSwitchNavigator({
-  welcome: {screen: WelcomeScreen},
-  auth: {screen: AuthScreen},
-  fbAuth: {screen: FbAuthScreen},
-  main: {
-    screen: createBottomTabNavigator({
-      home: {screen: HomeScreen},
-      schedule: {screen : ScheduleScreen},
-      employees: createStackNavigator ({
-        employeelist: {screen: EmployeeScreen},
-        addEmployee: {screen: AddEmployeeScreen},
-        editEmployee: {screen: EditEmployeeScreen }
-      })
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+// const main = createBottomTabNavigator({
+//   home: HomeScreen,
+//   schedule: ScheduleScreen,
+//   employees: Employee
+// })
+
+
+// const Employee = createStackNavigator({
+//   employeelist: EmployeeScreen,
+//   addEmployee: AddEmployeeScreen,
+//   editEmployee: EditEmployeeScreen 
+// })
+
+
+
+const RootNavigator = createSwitchNavigator({
+  // welcome: {screen: WelcomeScreen},
+  auth: AuthScreen,
+  register: RegisterScreen,
+  main: createBottomTabNavigator({
+    home: HomeScreen,
+    schedule: ScheduleScreen,
+    employees: createStackNavigator({
+      employeelist: EmployeeScreen,
+      addEmployee: AddEmployeeScreen,
+      editEmployee: EditEmployeeScreen 
+  },{
+    headerMode:'float',
+    defaultNavigationOptions: ({navigation}) => ({
+      header:null
     })
   }
-})
+  )
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      tabBarIcon: ({ tintColor }) => {
+        const { routeName } = navigation.state;
+        let IconComponent = Ionicons;
+        let iconName;
+        if (routeName === 'home') {
+          iconName = `ios-home`;
+          // Sometimes we want to add badges to some icons. 
+          // You can check the implementation below.
+        } else if (routeName === 'schedule') {
+          iconName = `ios-calendar`;
+        } else if (routeName === 'employees') {
+          iconName = `ios-people`;
+        }
 
-const AppContainer = createAppContainer(MainNavigator);
+        // You can return any component that you like here!
+        return <IconComponent name={iconName} size={25} color={tintColor} />;
+      },
+    }),
+    tabBarOptions: {
+      activeTintColor: '#007AFF',
+      inactiveTintColor: 'gray'
+    },
+    initialRouteName: "home",
+    
+  })
+})
+const AppContainer = createAppContainer(RootNavigator);
+
 
 export default class App extends React.Component {
   componentWillMount() {
@@ -55,12 +108,3 @@ export default class App extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

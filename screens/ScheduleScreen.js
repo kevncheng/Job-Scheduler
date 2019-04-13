@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import Calendar from '../components/calendar/Calendar';
 
-export default class HomeScreen extends Component {
+export default class ScheduleScreen extends Component {
   render() {
     return (
       <View>
-        <Text> textInComponent </Text>
-        <Text> textInComponent </Text>
-        <Text> textInComponent </Text>
-        <Text> textInComponent </Text>
-        <Text> textInComponent </Text>
+        <Calendar/>
       </View>
     );
   }

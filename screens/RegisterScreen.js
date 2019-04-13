@@ -36,7 +36,7 @@ class AuthScreen extends Component {
     return (
       <Button
         style={{ fontWeight: "bold" }}
-        title="Sign In"
+        title="Sign Up"
         onPress={this.onButtonPress}
         buttonStyle={styles.buttonStyle}
       />
@@ -66,13 +66,20 @@ class AuthScreen extends Component {
           value={this.props.password}
           errorMessage={this.props.error}
         />
+        <Input
+          label="Verify Your Password"
+          secureTextEntry
+          onChangeText={this.onPasswordChange}
+          value={this.props.password}
+          errorMessage={this.props.error}
+        />
 
         {this.renderButton()}
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Text color="rgba(52, 52, 52, 0.4)">or connect with</Text>
         </View>
         <SocialIcon
-          title="Log In With Facebook"
+          title="Sign Up With Facebook"
           type="facebook"
           button
           onPress={() => this.props.navigation.navigate("FbAuth")}
@@ -80,9 +87,9 @@ class AuthScreen extends Component {
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Button
             type="clear"
-            title="Sign Up"
+            title="Log In"
             style={{ color: "#007AFF", fontWeight: "bold" }}
-            onPress={()=>this.props.navigation.navigate('register')}
+            onPress={()=> this.props.navigation.navigate('auth')}
           />
         </View>
       </View>
