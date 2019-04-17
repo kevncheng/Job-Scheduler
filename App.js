@@ -12,6 +12,7 @@ import {
   createDrawerNavigator
 } from "react-navigation";
 
+import AppLoadingScreen from "./screens/AppLoadingScreen";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import AuthScreen from "./screens/AuthScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -22,6 +23,7 @@ import EditEmployeeScreen from "./screens/EditEmployeeScreen";
 import ScheduleScreen from "./screens/ScheduleScreen";
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FacebookLoginScreen from "./screens/FacebookLoginScreen";
 
 // const main = createBottomTabNavigator({
 //   home: HomeScreen,
@@ -40,7 +42,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const RootNavigator = createSwitchNavigator({
   // welcome: {screen: WelcomeScreen},
+  splash: AppLoadingScreen,
   auth: AuthScreen,
+  fb_auth: FacebookLoginScreen,
   register: RegisterScreen,
   main: createBottomTabNavigator({
     home: HomeScreen,
@@ -51,7 +55,7 @@ const RootNavigator = createSwitchNavigator({
       editEmployee: EditEmployeeScreen 
   },{
     headerMode:'float',
-    defaultNavigationOptions: ({navigation}) => ({
+    defaultNavigationOptions: () => ({
       header:null
     })
   }
