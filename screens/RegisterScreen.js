@@ -1,17 +1,19 @@
 import React, { Component } from "react";
-import { View, Text, ActivityIndicator, Dimensions } from "react-native";
+import { View, Text, ActivityIndicator, Dimensions , Alert} from "react-native";
 import {
   Button,
-  Input,
-  SocialIcon
+  Input
 } from "react-native-elements";
 import { connect } from "react-redux";
 import * as actions from "../actions";
+
 
 const width = Math.round(Dimensions.get("window").width);
 const height = Math.round(Dimensions.get("window").height);
 
 class AuthScreen extends Component {
+  state=({regError: ''})
+
   onEmailChange = text => {
     this.props.emailChanged(text);
   };
@@ -20,13 +22,26 @@ class AuthScreen extends Component {
     this.props.passwordChanged(text);
   };
 
-  onButtonPress = () => {
-    const { email, password } = this.props;
-
-    this.props.loginUser({ email, password }, () => {
-      this.props.navigation.navigate("home");
-    });
+  onVerifyPasswordChange = text => {
+    this.props.verifyPasswordChanged(text);
   };
+
+  onButtonPress = () => {
+    const { email, password, verifyPassword } = this.props;
+     if(password === verifyPassword && password.length>4 ) {
+    this.props.signupUser({ email, password }, () => {
+      this.props.navigation.navigate("home");
+      AsyncStorage.setItem('@LogInCredentials', {email,password});
+    });
+  } else if (password !== verifyPassword){
+    this.setState({regError:'Passwords Do Not Match'})
+  } else if (password.length < 5) {
+    this.setState({regError:'Password Must Be Atleast Five Characters'})
+  } else {
+    this.setState({regError: 'Something Went Wrong'})
+  }
+  
+};
 
   renderButton = () => {
     if (this.props.loading) {
@@ -59,35 +74,25 @@ class AuthScreen extends Component {
           style={{ marginBottom: 10 }}
         />
         <Input
-          label="Password"
-          placeholder="Enter Password"
+          label="Enter A Password With Atleast 5 Characters"
+          placeholder="Password"
           secureTextEntry
-          onChangeText={this.onPasswordChange}
-          value={this.props.password}
-          errorMessage={this.props.error}
+          onChangeText={this.onVerifyPasswordChange}
+          value={this.props.verifyPassword}
         />
         <Input
-          label="Verify Your Password"
+          placeholder="Verify Your Password"
           secureTextEntry
           onChangeText={this.onPasswordChange}
           value={this.props.password}
-          errorMessage={this.props.error}
+          errorMessage={this.state.regError}
         />
 
         {this.renderButton()}
         <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text color="rgba(52, 52, 52, 0.4)">or connect with</Text>
-        </View>
-        <SocialIcon
-          title="Sign Up With Facebook"
-          type="facebook"
-          button
-          onPress={() => this.props.navigation.navigate("FbAuth")}
-        />
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Button
             type="clear"
-            title="Log In"
+            title="Sign In"
             style={{ color: "#007AFF", fontWeight: "bold" }}
             onPress={()=> this.props.navigation.navigate('auth')}
           />
@@ -120,9 +125,9 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
+  const { email, password, error, loading, verifyPassword } = auth;
 
-  return { email, password, error, loading };
+  return { email, password, error, loading,verifyPassword };
 };
 
 export default connect(
