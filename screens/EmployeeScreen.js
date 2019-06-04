@@ -8,13 +8,7 @@ import _ from 'lodash';
 
 
 class EmployeeScreen extends Component {
-  constructor(props) {
-    super(props)
-    state = ({
-      serach: '',
-      isLoading: false
-    })
-  }
+
   componentWillMount() {
     this.props.employeesFetch();
     this.createDataSource(this.props);
@@ -56,11 +50,7 @@ class EmployeeScreen extends Component {
             backgroundColor:'#007AFF',
            }}
       />
-        <ScrollView style={{flex:1}}>
-          <SearchBar
-            lightTheme
-            placeholder="Search Employees"
-            />
+        <ScrollView >
           <ListView
             enableEmptySections
             dataSource={this.dataSource}
