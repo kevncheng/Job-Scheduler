@@ -61,17 +61,18 @@ class AuthScreen extends Component {
   render() {
     return (
       <View style={styles.viewContainer}>
-        <View style={{ alignItems: "center", justifyContent: "center" }}>
-          <Text style={{ fontWeight: "bold", fontSize: 60, marginBottom: 40 }}>
+        <View style={{ position: 'absolute', top: 100, left: 0, right: 0, }}>
+          <Text style={{ fontWeight: "bold", fontSize: 60, textAlign:'center', }}>
             "Mr.Goose"
           </Text>
         </View>
+        <View style = {{position: 'absolute', top: 220,  left: 0 , right: 0}}>
         <Input
           label="Username"
           placeholder="Enter Your Email"
           onChangeText={this.onEmailChange}
           value={this.props.email}
-          style={{ marginBottom: 10 }}
+          containerStyle = {{ marginBottom: 10}}
         />
         <Input
           label="Enter A Password With Atleast 5 Characters"
@@ -79,6 +80,8 @@ class AuthScreen extends Component {
           secureTextEntry
           onChangeText={this.onVerifyPasswordChange}
           value={this.props.verifyPassword}
+          containerStyle = {{ marginBottom: 10}}
+          
         />
         <Input
           placeholder="Verify Your Password"
@@ -86,8 +89,11 @@ class AuthScreen extends Component {
           onChangeText={this.onPasswordChange}
           value={this.props.password}
           errorMessage={this.state.regError}
+          containerStyle = {{ marginBottom: 10}}
+          errorStyle = {{position: 'absolute', bottom: -20, left: 5}}
         />
-
+        </View>
+        <View style = {{position: 'absolute', top: 420, left: 0, right: 0}}>
         {this.renderButton()}
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Button
@@ -95,7 +101,9 @@ class AuthScreen extends Component {
             title="Sign In"
             style={{ color: "#007AFF", fontWeight: "bold" }}
             onPress={()=> this.props.navigation.navigate('auth')}
+            containerStyle = {{marginTop: 10}}
           />
+        </View>
         </View>
       </View>
     );
