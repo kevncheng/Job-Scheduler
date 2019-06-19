@@ -17,23 +17,15 @@ const moment = extendMoment(Moment);
 
 class HomeScreen extends Component {
     state = {
-        ModalVisible: false
+        showModal: false
     };
     componentWillMount = () => {
         this.props.employeesFetch();
     };
 
-    // filter -> [day: {name:shift, name:shift}...]
-    // onTextSchedulePress = () => {
-    //   const { employees } = this.props;
-    //   const nextWeek = moment.range(moment().add(1,'day'),moment().add(1, 'week'))
-    //   _.filter(employees, employee => {
-    //     if(employee.shift){
-    //     let shiftObj = JSON.parse(employee.shift)
-    //     _.filter(shiftObj,)
-    //   }
-    //   })
-    // }
+    toggleModal = () => {
+        this.setState({ showModal: !this.state.showModal });
+    };
 
     onSignOut = () => {
         Alert.alert(
@@ -58,70 +50,8 @@ class HomeScreen extends Component {
         );
     };
 
-    // createNextWeekDateObj = () => {
-    //   let weekObj;
-    //   for( i = 1 ; i < 9 ; i++) {
-    //     let day = moment().add(i,'day')
-        
-    //   }
-    //   return weekObj
-    // }
-
-    filterEmployee = () => {
-      let workingEmployees = {}
-      _.forEach(this.props.employees, employee => {
-        // workingEmployees[employee.name] = employee.name
-        for( i = 1 ; i < 9 ; i++) {
-          let day = moment().add(i,'day').format('LL')
-          let workingShift = _.get(employee.shift, day)
-          if(workingShift){
-            let shift = {
-              ...shift, [day]:workingShift, 
-              
-            }
-            workingEmployees[employee.name + '' + employee.lastName] = {
-              shift, ['name']: employee.name, ['lastName']: employee.lastName, ['phone']: employee.phone
-            }
-          }
-        }
-      })
-      return workingEmployees;
-    }
-
-    getListOfNumbers = () => {
-      let phoneNumbers = []
-      _.forEach(this.filterEmployee(), employee => {
-        if(employee.phone) {
-        phoneNumbers = [...phoneNumbers, employee.phone]
-        }
-      })
-      return phoneNumbers;
-    }
-
-    prepScheduleString = () => {
-        let textShiftString = '';
-        let nextWeekEmployees = this.filterEmployee()
-        _.forEach(nextWeekEmployees, employee => {
-            textShiftString = textShiftString + `${employee.name} is working on:`;
-            _.forEach(employee.shift, shift => {
-                textShiftString =
-                    textShiftString + 
-                    `\n${shift.day}: ${moment(shift.startTime).format('LT')} till ${moment(shift.endTime).format('LT')}`;
-            });
-            textShiftString = textShiftString + '\n'
-        });
-        return textShiftString
-    };
-
-    textEmployeeSchedule = async () => {
-      const isAvailable = await SMS.isAvailableAsync();
-      if (isAvailable) {
-      const {status} = await SMS.sendSMSAsync(this.getListOfNumbers(),this.prepScheduleString())
-      console.log(status)
-      } else {
-      alert(`there's no SMS available on this device`)
-      }
-    }
+ 
+    
 
     onTextSchedulePress = () => {
         // this.setState({ModalVisible:true})
@@ -149,18 +79,15 @@ class HomeScreen extends Component {
                 <CurrentDay />
                 <Card>
                     <Button
-                        title="Text Next Week's Schedule"
-                        onPress={() => this.onTextSchedulePress()}
-                    />
-                    <Button 
-                      title = 'test'
-                      onPress = {() => this.filterEmployee()}
+                        title="Text Employee's Schedule"
+                        onPress={() => this.toggleModal()}
                     />
                 </Card>
-                {/* <TextShiftModal
-          isVisible = {this.state.ModalVisible}
-          {...this.props}
-        /> */}
+                <TextShiftModal
+                    visible = {this.state.showModal}
+                    toggleModal = {this.toggleModal}
+                    employees = {this.props.employees}
+        />
             </View>
         );
     }
