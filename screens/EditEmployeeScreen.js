@@ -5,6 +5,7 @@ import EmployeeForm from '../components/EmployeeForm';
 import { connect } from 'react-redux';
 import { employeeUpdate, employeeSave, employeeEdit, employeeDelete, clearForm } from '../actions';
 import _ from 'lodash';
+import Communications from 'react-native-communications';
 
 class EditEmployeeScreen extends Component {
     onBackButtonPress = () => {
@@ -36,6 +37,12 @@ class EditEmployeeScreen extends Component {
         });
     };
 
+    onCallButtonPress = () => {
+        if(this.props.phone){
+        Communications.phonecall(this.props.phone, true)
+        } else alert('Please Enter A Phone Number')
+    }
+
     render() {
         const employeeInfo = this.props.navigation.getParam('employeeInfo');
         return (
@@ -50,6 +57,13 @@ class EditEmployeeScreen extends Component {
                             onPress={() => this.onBackButtonPress()}
                             icon={{ name: 'chevron-left', color: 'white', size: 30 }}
                             type='clear'
+                        />
+                    }
+                    rightComponent = {
+                        <Button 
+                            onPress = {() => this.onCallButtonPress()}
+                            icon = {{ name: 'phone', color: 'white', size: 30}}
+                            type = 'clear'
                         />
                     }
                     containerStyle={{
@@ -110,7 +124,7 @@ const styles = {
         paddingLeft: 20
     },
     buttonStyle: {
-        margin: 10
+        margin: 15
     }
 };
 

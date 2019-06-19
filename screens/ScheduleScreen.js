@@ -15,20 +15,12 @@ const moment = extendMoment(Moment);
 
 
 class ScheduleScreen extends Component {
-  
-
-  updateSelectedDate = (date) => {
-    this.props.selectDate(date)
-  }
 
 
   render() {
-    // console.log('Scheduler Prop')
-    // console.log(this.props.date)
     return (
       <View>
         <Calendar
-          selectDate = {this.selectDate}
         />
         <WorkingList/>
         

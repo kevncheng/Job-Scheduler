@@ -11,56 +11,55 @@ import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
 
 class ScheduleList extends Component {
-
-
     onRowPress = () => {
-        this.props.navigation.navigate('editEmployee', { employeeInfo: this.props.employee });
-        _.each(this.props.employee, (value, prop) => {
+        this.props.navigation.navigate('editEmployee', { employeeInfo: this.props.employee.item });
+        _.each(this.props.employee.item, (value, prop) => {
             this.props.employeeUpdate({ prop, value });
         });
     };
 
     renderStatus = () => {
-        const { shift } = this.props.employee;
-        let dateObj = { day: moment(this.props.date).format('ddddD') };
-        if (!_.isUndefined(shift)) {
-            try {
-                let shiftString = _.find(JSON.parse(shift), dateObj);
-                let range = moment.range(shiftString.startTime, shiftString.endTime);
+        const { shift } = this.props.employee.item;
+        const { date } = this.props;
+        let dateObj = { day: date };
+        let foundShift = _.find(shift, dateObj);
+        if (!!(foundShift)) {
+                
+                let range = moment.range(foundShift.startTime, foundShift.endTime);
                 if (moment().within(range)) {
                     return <Badge status='success' />;
-                } else {
-                    return <Badge status='error' />;
-                }
-            } catch (e) {
-                return null;
+                } 
+            else {
+                return <Badge status = 'error'/>;
             }
         }
     };
 
     renderShiftTime = () => {
-        const { shift } = this.props.employee;
-        let dateObj = { day: moment(this.props.date).format('ddddD') };
-        try {
-            let shiftString = _.find(JSON.parse(shift), dateObj);
-            if (!_.isUndefined(shift)) {
+        const { shift } = this.props.employee.item;            
+        const { date } = this.props;
+        let dateObj = { day: date };
+        let foundShift = _.find(shift, dateObj);            
+            if (!_.isUndefined(foundShift)) {      
+                // console.log('foundShift')
+                // console.log(foundShift)
+                // console.log(`shift: ${shift}`)
+                // console.log(`date: ${date}`)
                 return (
                     <Text>
-                        {moment(shiftString.startTime).format('LT')} till{' '}
-                        {moment(shiftString.endTime).format('LT')}
+                        {moment(foundShift.startTime).format('LT')} till{' '}
+                        {moment(foundShift.endTime).format('LT')}
                     </Text>
                 );
             }
-            else {
-                return <Text> </Text>
-            }
-        } catch (e) {
-            return null
-        } 
+
     };
 
     render() {
-        const { name, lastName, shift, phone } = this.props.employee;
+        const { name, lastName, shift, phone } = this.props.employee.item;
+        // console.log(this.props.date)
+        // console.log('employee')
+        // console.log(this.props.employee)
         return (
             <TouchableOpacity onPress={this.onRowPress}>
                 <ListItem
@@ -84,5 +83,5 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { employeeUpdate, shiftParser }
+    { employeeUpdate }
 )(withNavigation(ScheduleList));

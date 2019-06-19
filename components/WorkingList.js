@@ -1,75 +1,55 @@
-import React, { Component } from "react";
-import { ListView, Text, Platform,View, ScrollView, TouchableOpacity } from "react-native";
-import {Icon, Button,ListItem, Divider, SearchBar,Header } from 'react-native-elements';
-import EmployeeList from '../components/EmployeeList';
+import React, { Component } from 'react';
+import { ListView, View, ScrollView, FlatList } from 'react-native';
+import { Icon, Button, ListItem, Divider, SearchBar, Header } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { employeesFetch } from '../actions';
-import Calendar from '../components/calendar/Calendar';
-import _ from 'lodash';
 
+import ScheduleList from './ScheduleList';
+
+import _ from 'lodash';
 import moment from 'moment';
-import { extendMoment } from 'moment-range';
-import ScheduleList from "./ScheduleList";
 
 class WorkingList extends Component {
-    componentWillMount() {
-        this.props.employeesFetch();
-        this.createDataSource(this.props);
+    componentWillMount = () => {
+      this.props.employeesFetch();
+    };
     
-      }
-    
-      
-      componentWillReceiveProps(nextProps) {
-        this.createDataSource(nextProps);  
-      }
+    filterEmployees = () => {
+        const { employees, date } = this.props;
+        let newEmployeesList = _.filter(employees, (e) => {
+                    if (e.shift) {
+                        let selectDateObj = { day: date };
+                        return _.find(e.shift, selectDateObj);
+                    }
+                });
+        return newEmployeesList
+    }
 
-      createDataSource({employees}) {
-        const { date } = this.props;
-        
-        const ds = new ListView.DataSource({
-          rowHasChanged: (r1,r2) => r1 !== r2
-        });
-        // let newEmployeesList = _.filter(employees, function(e) {
-        //     return e.name === 'Facebook account'
-        // })
-        let newEmployeesList = _.filter(employees, function(e) {
-            if(e.shift) {
-                let shiftObj = JSON.parse(e.shift)
-                let selectDateObj = {day: moment(date).format('ddddD')}
-                return _.find(shiftObj, selectDateObj)
-            }
-            
-        })
-        
-        this.dataSource = ds.cloneWithRows(newEmployeesList)
-      }
-      renderRow(employee) {
+    render() {
+        console.log(this.props.employees)
         return (
-           <ScheduleList employee={employee} />
-        )
-      }
-        
-  render() {
-    return (
-      <View>
-        <ScrollView style = {{paddingBottom: 100}}>
-          <ListView
-            enableEmptySections
-            dataSource={this.dataSource}
-            renderRow={this.renderRow}
-          />
-        </ScrollView>
-      </View>
-    );
-  }
+            <View>
+                <ScrollView style={{ paddingBottom: 100 }}>
+                    <FlatList
+                        data = {this.filterEmployees()}
+                        renderItem = {e => <ScheduleList employee={e}/>}
+                        keyExtractor = { employee => employee.uid}
+                    />
+                </ScrollView>
+            </View>
+        );
+    }
 }
 
 const mapStateToProps = state => {
     const employees = _.map(state.employees, (val, uid) => {
-      return {...val,uid};
+        return { ...val, uid };
     });
-    const {date} = state.calendar
-      return {employees, date}
-  };
+    const { date } = state.calendar;
+    return { employees, date };
+};
 
-export default connect(mapStateToProps,{employeesFetch})(WorkingList); 
+export default connect(
+    mapStateToProps,
+    { employeesFetch }
+)(WorkingList);

@@ -2,21 +2,22 @@ import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { ListItem, Divider, Button, Icon } from 'react-native-elements';
 import _ from 'lodash';
-import moment from 'moment';
+import moment from 'moment'
+import momentDurationPlugin from 'moment-duration-format'
+momentDurationPlugin(moment)
 
 const ShiftList = ({ shiftList, onPressDelete }) => (
     <View>
-        {shiftList.map((shift, i) => (
-            <View key={i}>
+        {_.map(shiftList, (shift) => (
+            <View key={shift.day}>
                 <ListItem
                     title={`${moment(shift.startTime).format('LLLL')} till \n${moment(
                         shift.endTime
                     ).format('LLLL')}`}
-                    subtitle={`${moment(shift.endTime).diff(
-                        moment(shift.startTime),
-                        'minutes'
-                    )} minutes`}
-                    onPress = {() => console.log(i)}
+                    subtitle={
+                        `${moment.duration(moment(shift.endTime).diff(moment(shift.startTime),'minutes'),'hours').format()}`
+                    }
+
                     rightIcon = {
                         <Button
                             type = 'clear'

@@ -17,9 +17,9 @@ import _ from 'lodash';
     name: '',
     lastName: '',
     phone: '',
-    shift: '',
+    shift: {},
     shiftObj: [],
-    avatar: ''
+    avatar: null
   };
   
   export default (state = INITIAL_STATE, action) => {
@@ -34,13 +34,14 @@ import _ from 'lodash';
       case CLEAR_FORM:
         return INITIAL_STATE
       case ADD_SHIFT:
-        return { ...state, shiftObj: [...state.shiftObj, payload]}
+        return { ...state, shift: {...state.shift, [payload.day]:payload}}
       case DELETE_SHIFT:
-        return { ...state, shiftObj: _.differenceWith(state.shiftObj,payload, _.isEqual) }
-      case LOAD_SHIFTS:
-        return { ...state, shiftObj: JSON.parse(state.shift) }
-      case PREP_SHIFT_STRING:
-        return { ...state, shift: JSON.stringify(state.shiftObj)}
+        const {[payload.day]: omitted, ...shift} = state.shift;
+        return { ...state, shift }
+      // case LOAD_SHIFTS:
+      //   return { ...state, shiftObj: JSON.parse(state.shift) }
+      // case PREP_SHIFT_STRING:
+      //   return { ...state, shift: JSON.stringify(state.shiftObj)}
       default:
         return state;
     }

@@ -10,7 +10,9 @@ import {
   DELETE_SHIFT,
   CLEAR_FORM,
   LOAD_SHIFTS,
-  PREP_SHIFT_STRING
+  PREP_SHIFT_STRING,
+  SELECTED_DATE,
+  PARSE_SHIFT
 } from './types';
 
 export const employeeEdit = (employee) => {
@@ -60,14 +62,19 @@ export const employeeSave = ({ name,lastName, phone, shift, uid },callback) => {
   const { currentUser } = firebase.auth();
 
   return (dispatch) => {
-    firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`)
+    let ref = firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}`);
       // .set({ name,lastName, phone })
-      .set({ name,lastName, phone, shift })
+      ref.set({ name, lastName, phone })
       .then(() => {
         // dispatch({ type: EMPLOYEE_SAVE_SUCCESS });
         console.log({name,lastName,phone, shift, uid})
         callback();
       });
+      firebase.database().ref(`/users/${currentUser.uid}/employees/${uid}/shift`)
+      .push({shift})
+      .then(() =>{
+        ref.update({shift})
+      })
   };
 };
 
@@ -109,9 +116,10 @@ export const uploadImage = async({tempURI,name,lastName}) => {
 }
 
 export const addShift = (payload) => {
-  return {
+  return (dispatch) =>{ dispatch({
     type: ADD_SHIFT,
     payload
+  })
   }
 }
 export const deleteShift = payload => {
@@ -146,3 +154,17 @@ export const prepShiftString = () => {
 //         .catch (err => console.log(err))
 //     }
 // }
+
+export const selectDate = (payload) => {
+  return  {
+    type: SELECTED_DATE,
+    payload
+  }
+}
+
+export const shiftParser = (payload) => {
+  return {
+    type: PARSE_SHIFT,
+    payload
+  }
+}

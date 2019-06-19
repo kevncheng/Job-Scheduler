@@ -5,12 +5,13 @@ import { connect } from 'react-redux';
 import { employeeUpdate } from '../actions';
 import { ImagePicker,Permissions } from 'expo'
 import firebase from 'firebase';
+import _ from 'lodash'
 
 
 class EmployeeForm extends Component {
-  state = {
-    image: null
-  };
+  state = ({
+    avatar_uri: '',
+  })
 
   pickImage = async () => {
     let {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL,Permissions.CAMERA)
@@ -19,70 +20,45 @@ class EmployeeForm extends Component {
     }
     let result = await ImagePicker.launchImageLibraryAsync();
     if(!result.cancelled){
-      this.uploadImage(result.uri)
-        .then(()=>{
-          this.setState({image: result.uri})
-          Alert.alert("Success")
-        })
-        .catch(()=>{
-          Alert.alert("Failed")
-        })
+      const image = result.uri
+      this.setState({image})
+      this.uploadImage(image)
     }
   }
 
-  uploadImage = async (uri,imageName) =>{
-    const {currentUser} = firebase.auth();
-    const blob = await new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function() {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function(e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      xhr.responseType = 'blob';
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    });
-
-    var ref = firebase.storage().ref().child(`avatar/${currentUser}/${this.props.name}${this.props.name}${Math.floor(Math.random(1*10000))}` );
-    ref.put(blob)
-      
-  }
-
-  // pickImage = async () => {
-  //   let {status} = await Permissions.askAsync(Permissions.CAMERA_ROLL,Permissions.CAMERA)
-  //   if (status !== 'granted') {
-  //     alert('You need to approve permissions to upload a picture')
-  //   }
-  //   let file = await ImagePicker.launchImageLibraryAsync({
-  //     allowsEditing: true,
-  //     aspect: [4,3]
-  //   })
-  //   if(!file.cancelled){
-  //     this.setState({image:file.uri})
-  //     this.uploadImage(file.uri,'test')
-  //       .then(()=>{
-  //           Alert.alert('Picture Uploaded')
-  //       })
-  //       .catch(()=>{
-  //           Alert.alert('Upload Failed')
-  //       })
-  //   }
-  // }
-
-  // uploadImage = async (uri,imageName) => {
-  //   const response = await fetch(uri);
-  //   const blob = await response.blob();
-
-  //   var ref = firebase.storage().ref().child('avatar/' + imageName)
-  //   return ref.put(blob);
-  // }  
-
+  uploadImage = async (uri) =>{
+    
+    try {
+      const {currentUser} = firebase.auth();
+      const ref = firebase.storage().ref().child(`avatar/${currentUser.uid}${this.props.name}${this.props.lastName}` ); 
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function() {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function(e) {
+          console.log(e);
+          reject(new TypeError('Network request failed'));
+        };
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+      await ref.put(blob)
+    //   await firebase.storage().ref('avatar').child(`${currentUser.uid}${this.props.name}${this.props.lastName}`)
+    //   .getDownloadURL().then(function(downloadURL){
+    //   // console.log('this is download url')
+    //   // console.log(downloadURL)
+    //   return downloadURL
+    // })
+    } catch(err) {
+      console.log(err)
+    }
+}
   
   render() {
-    let {image} = this.state
+    // console.log('this.props.avatar')
+    // console.log(this.props.avatar)
     return (
       <View>
       <View style={{justifyContent:'center', alignItems:'center', marginTop: 10}}>
@@ -93,7 +69,7 @@ class EmployeeForm extends Component {
           size='xlarge'
           onPress={this.pickImage}
           source={{
-            uri: image? image : '../assets/icon.png'
+            uri: this.props.avatar? this.props.avatar : this.state.image
           }}
         />
       </View>
@@ -119,20 +95,7 @@ class EmployeeForm extends Component {
             onChangeText={value => this.props.employeeUpdate({prop:'phone', value})}
             maxLength= {10}
           />
-          {/* <Text style={styles.pickerTextStyle}>Shift</Text>
-          <Picker
-            style={{ flex: 1 }}
-            selectedValue={this.props.shift}
-            onValueChange={value => this.props.employeeUpdate({prop: 'shift', value})}
-          >
-            <Picker.Item label="Monday" value="Monday" />
-            <Picker.Item label="Tuesday" value="Tuesday" />
-            <Picker.Item label="Wednesday" value="Wednesday" />
-            <Picker.Item label="Thursday" value="Thursday" />
-            <Picker.Item label="Friday" value="Friday" />
-            <Picker.Item label="Saturday" value="Saturday" />
-            <Picker.Item label="Sunday" value="Sunday" />
-          </Picker> */}
+
       </View>
     );
   }
@@ -145,9 +108,9 @@ const styles = {
   }
 }
 
-// const mapStateToProps = (state) => {
-//   const {name,phone,shift} = state.employeeForm;
-//     return {name , phone, shift};
-// }
+const mapStateToProps = (state) => {
+  const {name,lastName,phone,shift,avatar} = state.employeeForm;
+    return {name ,lastName, phone, shift, avatar};
+}
 
-export default connect(null,{employeeUpdate})(EmployeeForm);
+export default connect(mapStateToProps,{employeeUpdate})(EmployeeForm);
