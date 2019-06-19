@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, Modal, Alert, ScrollView } from 'react-native';
-import ShiftPicker from '../components/ShiftPicker';
 import { Button, Input, Header, ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import {
@@ -26,14 +25,6 @@ class AddShiftScreen extends Component {
         endTime: ''
     };
 
-    componentDidMount = () => {
-        const { navigation } = this.props;
-
-        if (this.props.shift) {
-            this.props.loadShifts();
-        }
-    };
-
     toggleModal = () => {
         this.setState({ showModal: !this.state.showModal });
     };
@@ -51,28 +42,18 @@ class AddShiftScreen extends Component {
 
     onPressConfirm = async () => {
         const { startTime, endTime } = this.state;
-        const {
-            addShift,
-            prepShiftString,
-            shift,
-            navigation,
-            name,
-            phone,
-            lastName,
-            employeeSave,
-            shiftObj,
-            confirmSaveShift
-        } = this.props;
-        const uid = navigation.getParam('employeeUID');
-        let day = moment(startTime).format('ddddD');
+        const { addShift, shift } = this.props;
+        let day = moment(startTime).format('LL');
+        let shiftAssigned = { day };
         if (moment(startTime).isAfter(endTime)) {
             return alert('Please Enter A Valid Time Range.');
         }
         if (!startTime || !endTime) {
             return alert('Please Enter A Valid Time.');
+        } else if (_.find(shift, shiftAssigned)) {
+            return alert('There Is Already A Shift Assigned For This Date.');
         } else {
             addShift({ day, startTime, endTime });
-            prepShiftString();
             this.toggleModal();
         }
     };
@@ -92,37 +73,38 @@ class AddShiftScreen extends Component {
             : this.setState({ PickerVisible: !PickerVisible, endTime: time });
     };
 
-    onPressDelete = (start,end) => {
+    onPressDelete = (start, end) => {
         const { deleteShift, prepShiftString } = this.props;
-        let day = moment(start).format('ddddD');
-        const obj = [{ startTime: start, endTime: end, day }];
+        let day = moment(start).format('LL');
+        const obj = { startTime: start, endTime: end, day };
         Alert.alert(
             'Are You Sure You Want To Delete?',
             `${moment(start).format('LLLL')} till ${moment(end).format('LLLL')}`,
             [
-              {text: 'Delete', onPress: () => {
-                  deleteShift(obj);
-                    prepShiftString();
-                }},
-              {
-                text: 'Cancel',
-                onPress: () =>{},
-                style: 'cancel',
-              },
+                {
+                    text: 'Delete',
+                    onPress: () => {
+                        deleteShift(obj);
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    onPress: () => {},
+                    style: 'cancel'
+                }
             ],
-            {cancelable: false},
-          );
-        
+            { cancelable: false }
+        );
+    };
+
+    formatShiftDuration = (startTime, endTime) => {
+        let h = moment(endTime).diff(moment(startTime), 'hours');
+        let m = Math.ceil(moment(endTime).diff(moment(startTime), 'minutes') % 60);
+        let durationText = h === 0 ? m + ' Minutes' : h + ' Hours ' + m + ' Minutes';
+        return durationText;
     };
 
     render() {
-        // console.log('SHIFTS');
-        // console.log(this.props.shift);
-        console.log('SHIFT OBJ');
-        console.log(this.props.shiftObj);
-        // const {name,lastName,phone} = this.props;
-        // console.log(`${name}${lastName}${phone}${this.props.navigation.getParam()}`)
-        //console.log(JSON.parse(this.props.shift))
         return (
             <View style={{ flex: 1 }}>
                 <Header
@@ -160,8 +142,9 @@ class AddShiftScreen extends Component {
                 <View style={{ flex: 1 }}>
                     <ScrollView style={{ flex: 1, marginBottom: 60 }}>
                         <ShiftList
-                            shiftList={this.props.shiftObj}
+                            shiftList={this.props.shift}
                             onPressDelete={this.onPressDelete}
+                            formatShiftDuration={this.formatShiftDuration}
                         />
                     </ScrollView>
                 </View>
@@ -179,8 +162,8 @@ class AddShiftScreen extends Component {
 }
 
 const mapStateToProps = state => {
-    const { name, lastName, phone, shift, shiftObj } = state.employeeForm;
-    return { shift, shiftObj, name, lastName, phone };
+    const { name, lastName, phone, shift} = state.employeeForm;
+    return { shift, name, lastName, phone };
 };
 
 export default connect(

@@ -6,7 +6,7 @@ import moment from 'moment'
 import momentDurationPlugin from 'moment-duration-format'
 momentDurationPlugin(moment)
 
-const ShiftList = ({ shiftList, onPressDelete }) => (
+const ShiftList = ({ shiftList, onPressDelete, formatShiftDuration }) => (
     <View>
         {_.map(shiftList, (shift) => (
             <View key={shift.day}>
@@ -15,7 +15,7 @@ const ShiftList = ({ shiftList, onPressDelete }) => (
                         shift.endTime
                     ).format('LLLL')}`}
                     subtitle={
-                        `${moment.duration(moment(shift.endTime).diff(moment(shift.startTime),'minutes'),'hours').format()}`
+                        `${formatShiftDuration(shift.startTime, shift.endTime)}`
                     }
 
                     rightIcon = {
