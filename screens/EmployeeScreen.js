@@ -14,12 +14,31 @@ import { connect } from 'react-redux';
 import { employeesFetch } from '../actions';
 import _ from 'lodash';
 
+
 class EmployeeScreen extends Component {
+    state = {
+        search: ''
+    };
     componentWillMount() {
         this.props.employeesFetch();
     }
 
+    searchFilter = () => {
+        const { search } = this.state;
+        if (this.state.search) {
+            let result = _.filter(this.props.employees, employee => {
+               if(_.includes((employee.name + employee.lastName).toLowerCase().replace(/\s/g, ''), search.toLowerCase().replace(/\s/g, ''))) {
+                   return employee
+               }
+            });
+        return result
+        }
+        return this.props.employees;
+    };
+
+
     render() {
+        
         return (
             <View>
                 <Header
@@ -35,9 +54,16 @@ class EmployeeScreen extends Component {
                         backgroundColor: '#007AFF'
                     }}
                 />
+                <SearchBar
+                    lightTheme
+                    placeholder='Search Employees'
+                    color='#007AFF'
+                    onChangeText={search => this.setState({ search })}
+                    value={this.state.search}
+                />
                 <ScrollView>
                     <FlatList
-                        data={this.props.employees}
+                        data={this.searchFilter()}
                         renderItem={e => <EmployeeList employee={e} />}
                         keyExtractor={employee => employee.uid}
                     />
