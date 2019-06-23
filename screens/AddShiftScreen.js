@@ -7,7 +7,6 @@ import {
     loadShifts,
     prepShiftString,
     employeeSave,
-    confirmSaveShift,
     deleteShift
 } from '../actions';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -25,9 +24,6 @@ class AddShiftScreen extends Component {
         endTime: ''
     };
 
-    toggleModal = () => {
-        this.setState({ showModal: !this.state.showModal });
-    };
 
     onPressBack = () => {
         const { navigation } = this.props;
@@ -35,7 +31,7 @@ class AddShiftScreen extends Component {
     };
 
     saveShift = () => {
-        const { employeeSave, name, lastName, phone, shift, navigation } = this.props;
+        const { employeeSave, name, lastName, phone, shift, navigation, } = this.props;
         const uid = navigation.getParam('employeeUID');
         employeeSave({ name, lastName, phone, shift, uid }, () => navigation.goBack());
     };
@@ -74,7 +70,7 @@ class AddShiftScreen extends Component {
     };
 
     onPressDelete = (start, end) => {
-        const { deleteShift, prepShiftString } = this.props;
+        const { deleteShift } = this.props;
         let day = moment(start).format('LL');
         const obj = { startTime: start, endTime: end, day };
         Alert.alert(
@@ -150,7 +146,7 @@ class AddShiftScreen extends Component {
                 </View>
                 <View style={{ position: 'absolute', bottom: 10, right: 0, left: 0 }}>
                     <Button
-                        title='Save Changes'
+                        title='Create Employee'
                         onPress={() => this.saveShift()}
                         icon={{ name: 'save', color: 'white' }}
                         buttonStyle={{ margin: 10 }}

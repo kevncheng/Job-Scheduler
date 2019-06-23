@@ -40,20 +40,11 @@ class AuthScreen extends Component {
     const { email, password } = this.props;
 
     this.props.loginUser({ email, password }, () => {
-      // this.saveCredentials();
       this.props.navigation.navigate("home");
       
     });
   };
 
-  // saveCredentials() {
-  //   const { email, password} = this.props;
-  //   let obj = {
-  //     login: email,
-  //     password: password
-  //   }
-  //   AsyncStorage.setItem('@LoginCredentials',JSON.stringify(obj))
-  // }
 
   renderButton = () => {
     if (this.props.loading) {
@@ -62,25 +53,30 @@ class AuthScreen extends Component {
 
     return (
       <Button
+        
         style={{ fontWeight: "bold" }}
         title="Sign In"
         onPress={this.onButtonPress}
         buttonStyle={styles.buttonStyle}
+        containerStyle={styles.buttonContainerStyle}
       />
     );
   };
 
   render() {
+    const {errorStyle, labelStyle, viewContainer, titleContainer, titleStyle, subtitlePositon} = styles;
     return (
-      <View style={styles.viewContainer}>
-        <View style={{ position: 'absolute', top: 100, left: 0, right: 0, }}>
-          <Text style={{ fontWeight: "bold", fontSize: 60, textAlign:'center', }}>
+      <View style={viewContainer}>
+        <View style={titleContainer}>
+          <Text style={titleStyle}>
             "Mr.Goose"
           </Text>
+          <Text style = {subtitlePositon}>"A Shift Managing App"</Text>
         </View>
-        <View style = {{position: 'absolute', top: 220,  left: 0 , right: 0}}>
+        <View style = {{position: 'relative',}}>
         <Input
           label="Username"
+          labelStyle = {labelStyle}
           placeholder="Enter Your Email"
           onChangeText={this.onEmailChange}
           value={this.props.email}
@@ -88,21 +84,22 @@ class AuthScreen extends Component {
         />
         <Input
           label="Password"
+          labelStyle = {labelStyle}
           placeholder="Enter Password"
           secureTextEntry
           onChangeText={this.onPasswordChange}
           value={this.props.password}
           errorMessage={this.props.error}
-          errorStyle = {{position: 'absolute', bottom: -20, left: 5}}
+          errorStyle = {errorStyle}
         />
         </View>
-        <View style = {{position: 'absolute', top: 420, left: 0, right: 0}}>
+        <View style = {{position: 'relative'}}>
         {this.renderButton()}
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style = {{margin: 4}}>or continue with</Text>
-        </View>
+        
+          <Text style = {{margin: 6, color:'grey', textAlign:'center'}}>or continue with</Text>
+       
         <SocialIcon
-          title="Sign In With Facebook"
+          title="Connect With Facebook"
           type="facebook"
           button
           onPress={() => this.onFacebookLogin()}
@@ -126,7 +123,6 @@ const styles = {
   viewContainer: {
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "rgba(251,247,245,.2)"
   },
   buttonStyle: {
     borderColor: "blue",
@@ -134,6 +130,9 @@ const styles = {
     justifyContent: "center",
     width: (width * 13) / 25,
     height: height / 12,
+    
+  },
+  buttonContainerStyle: {
     marginTop: 30
   },
   inputStyle: {
@@ -141,6 +140,21 @@ const styles = {
     borderBottomColor: "white",
     marginLeft: 20,
     marginRight: 20
+  },
+  errorStyle: {
+    position: 'absolute', bottom: -20, left: 5
+  },
+  labelStyle: {
+    color:'#007AFF'
+  },
+  titleContainer: {
+    left: 0, right: 0,marginVertical: 50
+  },
+  titleStyle: {
+    fontWeight: "bold", fontSize: 60, textAlign:'center'
+  },
+  subtitlePositon: {
+    position: 'absolute', bottom: -20, right: 20, fontSize: 14
   }
 };
 
