@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
-import { Divider, ListItem, Badge, Icon } from 'react-native-elements';
+import { Divider, ListItem, Badge, Icon, Avatar } from 'react-native-elements';
 import { withNavigation } from 'react-navigation';
 import { connect } from 'react-redux';
 import { employeeUpdate, shiftParser } from '../actions';
@@ -27,10 +27,10 @@ class ScheduleList extends Component {
                 
                 let range = moment.range(foundShift.startTime, foundShift.endTime);
                 if (moment().within(range)) {
-                    return <Badge status='success' />;
+                    return <Badge containerStyle={{ position: 'absolute', top: -4, left: 5, }} status='success' />;
                 } 
             else {
-                return <Badge status = 'error'/>;
+                return <Badge containerStyle={{ position: 'absolute', top: -4, left: 46, top: 17 }} status = 'error'/>;
             }
         }
     };
@@ -41,10 +41,6 @@ class ScheduleList extends Component {
         let dateObj = { day: date };
         let foundShift = _.find(shift, dateObj);            
             if (!_.isUndefined(foundShift)) {      
-                // console.log('foundShift')
-                // console.log(foundShift)
-                // console.log(`shift: ${shift}`)
-                // console.log(`date: ${date}`)
                 return (
                     <Text>
                         {moment(foundShift.startTime).format('LT')} till{' '}
@@ -56,20 +52,24 @@ class ScheduleList extends Component {
     };
 
     render() {
-        const { name, lastName, shift, phone } = this.props.employee.item;
+        const { name, lastName, shift, phone,avatar } = this.props.employee.item;
         // console.log(this.props.date)
         // console.log('employee')
         // console.log(this.props.employee)
         return (
             <TouchableOpacity onPress={this.onRowPress}>
+            <View>
                 <ListItem
-                    avatar={<Icon name='people' />}
+                    leftAvatar = {{
+                        source: {uri: avatar},
+                        icon: {name:'people'}
+                    }}
                     title={`${name} ${lastName}`}
                     subtitle={this.renderShiftTime()}
-                    leftIcon={this.renderStatus}
                     chevron
                 />
-
+                {this.renderStatus()}
+            </View>
                 <Divider style={{ backgroundColor: 'grey' }} />
             </TouchableOpacity>
         );
@@ -77,8 +77,8 @@ class ScheduleList extends Component {
 }
 
 const mapStateToProps = state => {
-    const { date, parseShift } = state.calendar;
-    return { date, parseShift };
+    const { date } = state.calendar;
+    return { date };
 };
 
 export default connect(

@@ -16,16 +16,16 @@ class EmployeeList extends Component {
   }
 
   render() {
-    const { name, lastName, shift, phone } = this.props.employee.item;
+    const { name, lastName, shift, phone, avatar } = this.props.employee.item;
     return (
       <TouchableOpacity
         onPress={this.onRowPress}
       >
         <ListItem
-        // leftAvatar = {{
-        //   title: `${name[0]}`,
-          
-        // }}
+        leftAvatar = {{
+          source: {uri:avatar},
+          icon: {name:'people'}
+        }}
         title={`${name} ${lastName}`} 
         subtitle={phone} 
         chevron

@@ -26,10 +26,10 @@ class WorkingList extends Component {
     }
 
     render() {
-        console.log(this.props.employees)
+        
         return (
             <View>
-                <ScrollView style={{ paddingBottom: 100 }}>
+                <ScrollView style={{ paddingBottom: 150 }}>
                     <FlatList
                         data = {this.filterEmployees()}
                         renderItem = {e => <ScheduleList employee={e}/>}

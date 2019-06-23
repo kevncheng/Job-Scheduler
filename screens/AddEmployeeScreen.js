@@ -4,17 +4,26 @@ import { Button, Icon, Header } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { employeeUpdate, employeeCreate, uploadImage } from '../actions';
 import EmployeeForm from '../components/EmployeeForm';
-import firebase from 'firebase';
+import _ from 'lodash';
+
 
 class AddEmployeeScreen extends Component {
+    componentWillMount = () => {
+        let uniqueKey = _.uniqueId() * Math.floor(Math.random() * 100000);
+        this.props.employeeUpdate({ prop: 'uniqueKey', value: uniqueKey });
+    };
+
     onButtonPress = () => {
-        const { name, lastName, phone, shift } = this.props;
+        const { name, lastName, phone, shift, avatar, uniqueKey } = this.props;
         if (name < 1) {
             alert('Please Enter A Name');
         } else {
-            this.props.employeeCreate({ name, lastName, phone, shift: shift || '' }, () => {
-                this.props.navigation.goBack();
-            });
+            this.props.employeeCreate(
+                { name, lastName, phone, shift: shift || '', avatar: avatar || null, uniqueKey },
+                () => {
+                    this.props.navigation.goBack();
+                }
+            );
         }
     };
     render() {
@@ -22,7 +31,7 @@ class AddEmployeeScreen extends Component {
             <View>
                 <Header
                     centerComponent={{
-                        text: 'Create An Employee',
+                        text: 'Profile',
                         style: { color: '#fff', fontSize: 24 }
                     }}
                     leftComponent={
@@ -30,6 +39,7 @@ class AddEmployeeScreen extends Component {
                             onPress={() => this.props.navigation.goBack()}
                             icon={{ name: 'chevron-left', color: 'white', size: 30 }}
                             type='clear'
+                            containerStyle={{ left: -10 }}
                         />
                     }
                     containerStyle={{
@@ -42,24 +52,19 @@ class AddEmployeeScreen extends Component {
                     icon={{ name: 'save', color: 'white' }}
                     iconRight
                     onPress={this.onButtonPress}
-                    style={{ margin: 10 }}
+                    containerStyle={{ margin: 20 }}
+                    raised
                 />
             </View>
         );
     }
 }
 
-const styles = {
-    viewContainer: {
-        justifyContent: 'center',
-        flex: 1
-    }
-};
 
 const mapStateToProps = state => {
-    const { name, lastName, phone, shift, tempURI } = state.employeeForm;
+    const { name, lastName, phone, shift, avatar, uniqueKey } = state.employeeForm;
 
-    return { name, lastName, phone, shift, tempURI };
+    return { name, lastName, phone, shift, avatar, uniqueKey };
 };
 
 export default connect(

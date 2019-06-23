@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import { employeesFetch } from '../actions';
 import _ from 'lodash';
 
-
 class EmployeeScreen extends Component {
     state = {
         search: ''
@@ -25,20 +24,24 @@ class EmployeeScreen extends Component {
 
     searchFilter = () => {
         const { search } = this.state;
-        if (this.state.search) {
-            let result = _.filter(this.props.employees, employee => {
-               if(_.includes((employee.name + employee.lastName).toLowerCase().replace(/\s/g, ''), search.toLowerCase().replace(/\s/g, ''))) {
-                   return employee
-               }
+        const { employees } = this.props;
+        if (search) {
+            let result = _.filter(employees, employee => {
+                if (
+                    _.includes (
+                        (employee.name + employee.lastName).toLowerCase().replace(/\s/g, ''),
+                        search.toLowerCase().replace(/\s/g, '')
+                    )
+                ) {
+                    return employee;
+                }
             });
-        return result
+            return result;
         }
-        return this.props.employees;
+        return employees;
     };
 
-
     render() {
-        
         return (
             <View>
                 <Header
@@ -61,7 +64,7 @@ class EmployeeScreen extends Component {
                     onChangeText={search => this.setState({ search })}
                     value={this.state.search}
                 />
-                <ScrollView>
+                <ScrollView style = {{paddingBottom: 150}}>
                     <FlatList
                         data={this.searchFilter()}
                         renderItem={e => <EmployeeList employee={e} />}

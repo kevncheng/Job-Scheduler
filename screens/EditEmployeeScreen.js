@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, Picker, Alert } from 'react-native';
-import { Button, Input, Icon, Header } from 'react-native-elements';
+import { View,Alert,ScrollView } from 'react-native';
+import { Button, Header } from 'react-native-elements';
 import EmployeeForm from '../components/EmployeeForm';
 import { connect } from 'react-redux';
 import { employeeUpdate, employeeSave, employeeEdit, employeeDelete, clearForm } from '../actions';
 import _ from 'lodash';
 import Communications from 'react-native-communications';
+
+
 
 class EditEmployeeScreen extends Component {
     onBackButtonPress = () => {
@@ -21,13 +23,24 @@ class EditEmployeeScreen extends Component {
     };
 
     onButtonPress = () => {
-        const { name, lastName, phone, shift, employeeSave,clearForm } = this.props;
+        const { name, lastName, phone, shift, avatar,employeeSave,employeeUpdate,clearForm, uniqueKey } = this.props;
         const employeeParam = this.props.navigation.getParam('employeeInfo');
-
-        employeeSave({ name, lastName, phone, shift, uid: employeeParam.uid }, () => {
+        
+        if(!uniqueKey){
+            let key = _.uniqueId() * Math.floor(Math.random() * 100000)
+            employeeUpdate({prop:'uniqueKey', value:key})
+            employeeSave({ name, lastName, phone, shift, avatar: avatar || null,uid: employeeParam.uid, uniqueKey }, () => {
+                this.props.navigation.goBack();
+                })
+              clearForm()
+            
+        }
+        if(uniqueKey){
+        employeeSave({ name, lastName, phone, shift, avatar,uid: employeeParam.uid, uniqueKey }, () => {
           this.props.navigation.goBack();
           })
         clearForm()
+        }
     };
 
     onFireButtonPress = () => {
@@ -57,6 +70,7 @@ class EditEmployeeScreen extends Component {
                             onPress={() => this.onBackButtonPress()}
                             icon={{ name: 'chevron-left', color: 'white', size: 30 }}
                             type='clear'
+                            containerStyle = {{left:-10}}
                         />
                     }
                     rightComponent = {
@@ -70,23 +84,29 @@ class EditEmployeeScreen extends Component {
                         backgroundColor: '#007AFF'
                     }}
                 />
-                <EmployeeForm style={{ marginBottom: 10, left: 5, right: 5 }} {...this.props} />
+                
+                <ScrollView style = {{marginBottom: 40}}>
+                <EmployeeForm style={{ marginVertical: 20 }} {...this.props} />
+                
                 <View style={styles.buttonStyle}>
                     <Button
+                        raised
                         title='Save Changes'
                         icon={{ name: 'save', color: 'white' }}
                         iconRight
                         onPress={this.onButtonPress}
-                        style={{ margin: 10 }}
+                        containerStyle={{ margin: 10 }}
                     />
                     <Button
+                        raised
                         title='Edit Shifts'
                         icon={{ name: 'edit', color: 'white' }}
                         iconRight
                         onPress={() => this.onAddShiftButtonPress()}
-                        style={{ margin: 10 }}
+                        containerStyle = {{margin: 10}}
                     />
                     <Button
+                        raised
                         title='Fire Employee'
                         icon={{ name: 'delete-forever', color: 'white' }}
                         iconRight
@@ -110,9 +130,10 @@ class EditEmployeeScreen extends Component {
                         buttonStyle={{
                             backgroundColor: 'red'
                         }}
-                        style={{ margin: 10, marginBottom: 10 }}
+                        containerStyle={{ margin: 10}}
                     />
                 </View>
+                </ScrollView>
             </View>
         );
     }
@@ -129,9 +150,9 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const { name, lastName, phone, shift, avatar, tempURI } = state.employeeForm;
+    const { name, lastName, phone, shift, avatar, uniqueKey } = state.employeeForm;
 
-    return { name, lastName, phone, shift, avatar, tempURI };
+    return { name, lastName, phone, shift, avatar, uniqueKey };
 };
 
 export default connect(
