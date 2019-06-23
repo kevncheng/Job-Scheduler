@@ -64,7 +64,6 @@ class HomeScreen extends Component {
             <View>
                 <Header
                     centerComponent={{ icon: 'home', color: '#fff' }}
-                    rightComponent={{ icon: 'message', color: '#fff' }}
                     leftComponent={
                         <Button
                             type='clear'
@@ -77,12 +76,13 @@ class HomeScreen extends Component {
                     }}
                 />
                 <CurrentDay />
-                <Card>
+              
                     <Button
                         title="Text Employee's Schedule"
                         onPress={() => this.toggleModal()}
+                        containerStyle = {{margin: 30}}
                     />
-                </Card>
+               
                 <TextShiftModal
                     visible = {this.state.showModal}
                     toggleModal = {this.toggleModal}
@@ -103,5 +103,5 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { employeesFetch }
+    { employeesFetch,signOut }
 )(HomeScreen);

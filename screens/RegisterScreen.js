@@ -59,16 +59,19 @@ class AuthScreen extends Component {
   };
 
   render() {
+    const { viewContainer, labelStyle, titleContainer, subtitlePositon, titlePositon } = styles;
     return (
-      <View style={styles.viewContainer}>
-        <View style={{ position: 'absolute', top: 100, left: 0, right: 0, }}>
-          <Text style={{ fontWeight: "bold", fontSize: 60, textAlign:'center', }}>
+      <View style={viewContainer}>
+        <View style={titleContainer}>
+          <Text style={titlePositon}>
             "Mr.Goose"
           </Text>
+          <Text style = {subtitlePositon}>"A Shift Managing App"</Text>
         </View>
-        <View style = {{position: 'absolute', top: 220,  left: 0 , right: 0}}>
+        <View style = {{position: 'relative',}}>
         <Input
           label="Username"
+          labelStyle = {labelStyle}
           placeholder="Enter Your Email"
           onChangeText={this.onEmailChange}
           value={this.props.email}
@@ -76,6 +79,7 @@ class AuthScreen extends Component {
         />
         <Input
           label="Enter A Password With Atleast 5 Characters"
+          labelStyle = {labelStyle}
           placeholder="Password"
           secureTextEntry
           onChangeText={this.onVerifyPasswordChange}
@@ -93,7 +97,7 @@ class AuthScreen extends Component {
           errorStyle = {{position: 'absolute', bottom: -20, left: 5}}
         />
         </View>
-        <View style = {{position: 'absolute', top: 420, left: 0, right: 0}}>
+        <View style = {{position: 'relative', }}>
         {this.renderButton()}
         <View style={{ justifyContent: "center", alignItems: "center" }}>
           <Button
@@ -114,7 +118,6 @@ const styles = {
   viewContainer: {
     justifyContent: "center",
     flex: 1,
-    backgroundColor: "rgba(251,247,245,.2)"
   },
   buttonStyle: {
     borderColor: "blue",
@@ -122,13 +125,24 @@ const styles = {
     justifyContent: "center",
     width: (width * 13) / 25,
     height: height / 12,
-    marginTop: 30
+    marginVertical: 10
   },
   inputStyle: {
     borderBottomWidth: 1,
     borderBottomColor: "white",
-    marginLeft: 20,
-    marginRight: 20
+    marginVertical: 10,
+  },
+  labelStyle: {
+    color:'#007AFF'
+  },
+  titleContainer: {
+    left: 0, right: 0, marginBottom: 50
+  },
+  subtitlePositon: {
+    position: 'absolute', bottom: -20, right: 20, fontSize: 14
+  },
+  titlePositon: {
+    fontWeight: "bold", fontSize: 60, textAlign:'center'
   }
 };
 
