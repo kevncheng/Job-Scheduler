@@ -24,16 +24,18 @@ class AddShiftScreen extends Component {
         endTime: ''
     };
 
-
+    toggleModal = () => {
+        this.setState({showModal: !this.state.showModal})
+    }
     onPressBack = () => {
         const { navigation } = this.props;
         navigation.goBack();
     };
 
     saveShift = () => {
-        const { employeeSave, name, lastName, phone, shift, navigation, } = this.props;
+        const { employeeSave, name, lastName, phone, shift, navigation, avatar,uniqueKey } = this.props;
         const uid = navigation.getParam('employeeUID');
-        employeeSave({ name, lastName, phone, shift, uid }, () => navigation.goBack());
+        employeeSave({ name, lastName, phone, shift, uid, avatar: avatar || null,uniqueKey }, () => navigation.goBack());
     };
 
     onPressConfirm = async () => {
@@ -146,7 +148,7 @@ class AddShiftScreen extends Component {
                 </View>
                 <View style={{ position: 'absolute', bottom: 10, right: 0, left: 0 }}>
                     <Button
-                        title='Create Employee'
+                        title='Save Changes'
                         onPress={() => this.saveShift()}
                         icon={{ name: 'save', color: 'white' }}
                         buttonStyle={{ margin: 10 }}
@@ -158,8 +160,8 @@ class AddShiftScreen extends Component {
 }
 
 const mapStateToProps = state => {
-    const { name, lastName, phone, shift} = state.employeeForm;
-    return { shift, name, lastName, phone };
+    const { name, lastName, phone, shift, avatar,uniqueKey} = state.employeeForm;
+    return { shift, name, lastName, phone, avatar, uniqueKey };
 };
 
 export default connect(

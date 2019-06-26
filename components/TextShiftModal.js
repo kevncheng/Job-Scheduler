@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Modal, ScrollView, Picker } from 'react-native';
+import { View, Text, Modal, ScrollView } from 'react-native';
 import { Button, Card, ButtonGroup } from 'react-native-elements';
 import * as SMS from 'expo-sms';
 import _ from 'lodash';
@@ -71,7 +71,6 @@ class TextShiftModal extends Component {
                 this.getListOfNumbers(),
                 this.prepScheduleString()
             );
-            console.log(status);
         } else {
             alert(`There's no SMS available on this device.`);
         }
@@ -96,11 +95,15 @@ class TextShiftModal extends Component {
     render() {
         const buttons = ['One Week', 'Two Weeks', 'One Month'];
         const { toggleModal, visible } = this.props;
-        const {scheduleLength} = this.state;
+        const {scheduleLength, selectedIndex} = this.state;
         const { containerStyle, cardStyle, buttonContainer } = styles;
-        console.log(this.state.noPhoneNumber);
         return (
-            <Modal visible={visible} animationType='slide' onRequestClose={() => {}} transparent>
+            <Modal 
+                visible = { visible } 
+                animationType ='slide' 
+                onRequestClose = {() => {}} 
+                transparent
+            >
                 <View style={containerStyle}>
                     <Card
                         style={cardStyle}
