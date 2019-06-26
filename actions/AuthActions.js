@@ -1,5 +1,4 @@
 import firebase from 'firebase';
-import {AsyncStorage} from 'react-native';
 
 import {
   EMAIL_CHANGED,
@@ -8,7 +7,6 @@ import {
   LOGIN_USER_SUCCESS,
   LOGIN_USER_FAIL,
   LOGIN_USER,
-  SIGNUP_USER,
   SIGNUP_USER_FAIL,
   SIGNOUT_USER,
   ERROR,
@@ -24,7 +22,7 @@ export const handleError = (error) => {
 
 export const resetError = () => {
   return {
-    type: REST_ERROR
+    type: RESET_ERROR
   }
 };
 
@@ -96,11 +94,11 @@ export const emailChanged = (text) => {
 
   
 
-  export const signOut =(callback) =>{
+  export const signOut = () =>{
     return (dispatch) => {
       dispatch({type:SIGNOUT_USER});
       firebase.auth().signOut()
-            .then(callback())
+            .then(alert('Sign Out Success'))
             .catch(console.log('troubles signing out'));
     }
   }

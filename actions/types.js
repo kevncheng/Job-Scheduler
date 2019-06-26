@@ -13,7 +13,7 @@ export const SIGNUP_USER_FAIL = 'signup_user_fail';
 
 export const SIGNOUT_SUCCESS = 'signout_success';
 export const SIGNOUT_FAIL = 'signout_fail';
-export const SIGNOUT_USER = 'signout';
+export const SIGNOUT_USER = 'sign_out';
 
 export const FACEBOOK_LOGIN_SUCCESS = 'facebook_login_success';
 export const FACEBOOK_LOGIN_FAIL = 'facebook_login_fail';

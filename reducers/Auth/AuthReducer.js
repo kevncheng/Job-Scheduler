@@ -7,7 +7,6 @@ import {
     LOGIN_USER_SUCCESS,
     LOGIN_USER_FAIL,
     LOGIN_USER,
-    SIGNUP_USER,
     SIGNUP_USER_FAIL,
     SIGNOUT_USER,
   } from '../../actions/types';
@@ -41,9 +40,6 @@ import {
       case LOGIN_USER_FAIL:
         return { ...state, error: 'Authentication Failed.', password: '', verifyPassword:'', loading: false };
       case LOGIN_USER:
-        return { ...state, loading: true, error: '' };
-      
-      case SIGNUP_USER:
         return { ...state, loading: true, error: '' };
       case SIGNUP_USER_FAIL:
         return { ...state, error: 'Registration Failed.', password: '',verifyPassword:'', loading: false };
