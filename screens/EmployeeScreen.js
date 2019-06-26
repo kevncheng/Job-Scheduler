@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
-import {
-    ListView,
-    Text,
-    Platform,
-    View,
-    ScrollView,
-    TouchableOpacity,
-    FlatList
-} from 'react-native';
-import { Icon, Button, ListItem, Divider, SearchBar, Header } from 'react-native-elements';
+import { View, ScrollView, FlatList } from 'react-native';
+import { Button, SearchBar, Header } from 'react-native-elements';
 import EmployeeList from '../components/EmployeeList';
 import { connect } from 'react-redux';
 import { employeesFetch } from '../actions';
@@ -18,9 +10,6 @@ class EmployeeScreen extends Component {
     state = {
         search: ''
     };
-    componentWillMount() {
-        this.props.employeesFetch();
-    }
 
     searchFilter = () => {
         const { search } = this.state;
@@ -28,7 +17,7 @@ class EmployeeScreen extends Component {
         if (search) {
             let result = _.filter(employees, employee => {
                 if (
-                    _.includes (
+                    _.includes(
                         (employee.name + employee.lastName).toLowerCase().replace(/\s/g, ''),
                         search.toLowerCase().replace(/\s/g, '')
                     )
@@ -64,7 +53,7 @@ class EmployeeScreen extends Component {
                     onChangeText={search => this.setState({ search })}
                     value={this.state.search}
                 />
-                <ScrollView style = {{paddingBottom: 150}}>
+                <ScrollView style={{ paddingBottom: 150 }}>
                     <FlatList
                         data={this.searchFilter()}
                         renderItem={e => <EmployeeList employee={e} />}

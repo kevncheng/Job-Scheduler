@@ -2,18 +2,13 @@ import React, { Component } from 'react';
 import { View, AsyncStorage, Alert, ListView } from 'react-native';
 import { Button, Header, Avatar, Card } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { announcementFetch, signOut } from '../actions';
+import { signOut } from '../actions';
 import _ from 'lodash';
-import { withNavigation } from 'react-navigation';
-import firebase from 'firebase';
-import * as SMS from 'expo-sms';
 import CurrentDay from '../components/CurrentDay';
 import { employeesFetch } from '../actions';
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 import TextShiftModal from '../components/TextShiftModal';
-
-const moment = extendMoment(Moment);
 
 class HomeScreen extends Component {
     state = {
@@ -54,7 +49,6 @@ class HomeScreen extends Component {
     
 
     onTextSchedulePress = () => {
-        // this.setState({ModalVisible:true})
         this.textEmployeeSchedule()
         
     };
