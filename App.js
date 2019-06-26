@@ -1,9 +1,9 @@
 import React from 'react';
-import { AsyncStorage } from 'react-native';
+import { YellowBox } from 'react-native';
 import { Provider } from 'react-redux';
 import store from './store';
 import firebase from 'firebase';
-
+import _ from 'lodash';
 import {
     createStackNavigator,
     createAppContainer,
@@ -21,16 +21,22 @@ import EmployeeScreen from './screens/EmployeeScreen';
 import AddEmployeeScreen from './screens/AddEmployeeScreen';
 import EditEmployeeScreen from './screens/EditEmployeeScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
-import AddShiftScreen from './screens/AddShiftScreen'
+import AddShiftScreen from './screens/AddShiftScreen';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import FacebookLoginScreen from './screens/FacebookLoginScreen';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+    if (message.indexOf('Setting a timer') <= -1) {
+        _console.warn(message);
+    }
+};
 
 const RootNavigator = createSwitchNavigator({
     // welcome: {screen: WelcomeScreen},
     loading: AppLoadingScreen,
     auth: AuthScreen,
-    fb_auth: FacebookLoginScreen,
     register: RegisterScreen,
     main: createBottomTabNavigator(
         {
