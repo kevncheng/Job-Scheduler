@@ -24,14 +24,11 @@ class ScheduleList extends Component {
         let dateObj = { day: date };
         let foundShift = _.find(shift, dateObj);
         if (!!(foundShift)) {
-                
                 let range = moment.range(foundShift.startTime, foundShift.endTime);
-                if (moment().within(range)) {
-                    return <Badge containerStyle={{ position: 'absolute', top: -4, left: 5, }} status='success' />;
-                } 
-            else {
-                return <Badge containerStyle={{ position: 'absolute', top: -4, left: 46, top: 17 }} status = 'error'/>;
-            }
+                let status = moment().within(range)? 'success' : 'error'
+                return (
+                    <Badge containerStyle={{ position: 'absolute', top: -4, left: 46, top: 17 }} status = {status}/>
+                );
         }
     };
 
