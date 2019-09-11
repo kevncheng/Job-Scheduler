@@ -3,7 +3,7 @@ import { View, ScrollView, FlatList } from 'react-native';
 import { Button, SearchBar, Header } from 'react-native-elements';
 import EmployeeList from '../components/EmployeeList';
 import { connect } from 'react-redux';
-import { employeesFetch } from '../actions';
+import { employeesFetch, clearForm } from '../actions';
 import _ from 'lodash';
 
 class EmployeeScreen extends Component {
@@ -29,6 +29,11 @@ class EmployeeScreen extends Component {
         }
         return employees;
     };
+    onAddEmployeePress = () => {
+        const { navigation: { navigate }, clearForm } = this.props;
+        clearForm();
+        navigate('addEmployee');
+    };
 
     render() {
         return (
@@ -37,7 +42,7 @@ class EmployeeScreen extends Component {
                     centerComponent={{ text: 'Employees', style: { color: '#fff', fontSize: 24 } }}
                     rightComponent={
                         <Button
-                            onPress={() => this.props.navigation.navigate('addEmployee')}
+                            onPress={() => this.onAddEmployeePress()}
                             icon={{ name: 'add', color: 'white' }}
                             type='clear'
                         />
@@ -74,5 +79,5 @@ const mapStateToProps = state => {
 
 export default connect(
     mapStateToProps,
-    { employeesFetch }
+    { employeesFetch, clearForm }
 )(EmployeeScreen);
