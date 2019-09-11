@@ -81,14 +81,12 @@ class EmployeeForm extends Component {
           <Input
             label="First Name"
             labelStyle = {labelStyle}
-            placeholder="Jane"
             value={name}
             onChangeText={value => employeeUpdate({prop:'name', value})}
           />
           <Input 
             label = "Last Name"
             labelStyle = {labelStyle}
-            placeholder = 'Doe'
             value = {lastName}
             onChangeText = {value => employeeUpdate({prop:'lastName', value})}
           />

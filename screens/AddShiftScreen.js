@@ -1,14 +1,8 @@
-import React, { Component } from 'react';
-import { View, Text, Modal, Alert, ScrollView } from 'react-native';
-import { Button, Input, Header, ListItem } from 'react-native-elements';
-import { connect } from 'react-redux';
-import {
-    addShift,
-    loadShifts,
-    prepShiftString,
-    employeeSave,
-    deleteShift
-} from '../actions';
+import React, {Component} from 'react';
+import {View, Text, Modal, Alert, ScrollView} from 'react-native';
+import {Button, Input, Header, ListItem} from 'react-native-elements';
+import {connect} from 'react-redux';
+import {addShift, loadShifts, prepShiftString, employeeSave, deleteShift} from '../actions';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import ShiftModal from '../components/ShiftModal';
 import moment from 'moment';
@@ -25,24 +19,35 @@ class AddShiftScreen extends Component {
     };
 
     toggleModal = () => {
-        this.setState({showModal: !this.state.showModal})
-    }
+        this.setState({showModal: !this.state.showModal});
+    };
     onPressBack = () => {
-        const { navigation } = this.props;
+        const {navigation} = this.props;
         navigation.goBack();
     };
 
     saveShift = () => {
-        const { employeeSave, name, lastName, phone, shift, navigation, avatar,uniqueKey } = this.props;
+        const {
+            employeeSave,
+            name,
+            lastName,
+            phone,
+            shift,
+            navigation,
+            avatar,
+            uniqueKey
+        } = this.props;
         const uid = navigation.getParam('employeeUID');
-        employeeSave({ name, lastName, phone, shift, uid, avatar: avatar || null,uniqueKey }, () => navigation.goBack());
+        employeeSave({name, lastName, phone, shift, uid, avatar: avatar || null, uniqueKey}, () =>
+            navigation.goBack()
+        );
     };
 
     onPressConfirm = async () => {
-        const { startTime, endTime } = this.state;
-        const { addShift, shift } = this.props;
+        const {startTime, endTime} = this.state;
+        const {addShift, shift} = this.props;
         let day = moment(startTime).format('LL');
-        let shiftAssigned = { day };
+        let shiftAssigned = {day};
         if (moment(startTime).isAfter(endTime)) {
             return alert('Please Enter A Valid Time Range.');
         }
@@ -51,30 +56,30 @@ class AddShiftScreen extends Component {
         } else if (_.find(shift, shiftAssigned)) {
             return alert('There Is Already A Shift Assigned For This Date.');
         } else {
-            addShift({ day, startTime, endTime });
+            addShift({day, startTime, endTime});
             this.toggleModal();
         }
     };
 
     onPickerCancel = () => {
-        this.setState({ showPicker: !this.state.PickerVisible });
+        this.setState({showPicker: !this.state.PickerVisible});
     };
     showPicker = start => {
         let pickStart = start ? true : false;
-        this.setState({ PickerVisible: true, pickStart });
+        this.setState({PickerVisible: true, pickStart});
     };
 
     handleTimePicked = time => {
-        const { pickStart, PickerVisible } = this.state;
+        const {pickStart, PickerVisible} = this.state;
         pickStart
-            ? this.setState({ PickerVisible: !PickerVisible, startTime: time })
-            : this.setState({ PickerVisible: !PickerVisible, endTime: time });
+            ? this.setState({PickerVisible: !PickerVisible, startTime: time})
+            : this.setState({PickerVisible: !PickerVisible, endTime: time});
     };
 
     onPressDelete = (start, end) => {
-        const { deleteShift } = this.props;
+        const {deleteShift} = this.props;
         let day = moment(start).format('LL');
-        const obj = { startTime: start, endTime: end, day };
+        const obj = {startTime: start, endTime: end, day};
         Alert.alert(
             'Are You Sure You Want To Delete?',
             `${moment(start).format('LLLL')} till ${moment(end).format('LLLL')}`,
@@ -91,7 +96,7 @@ class AddShiftScreen extends Component {
                     style: 'cancel'
                 }
             ],
-            { cancelable: false }
+            {cancelable: false}
         );
     };
 
@@ -104,24 +109,24 @@ class AddShiftScreen extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
                 <Header
-                    centerComponent={{ text: 'Shifts', style: { color: '#ffff', fontSize: 24 } }}
+                    centerComponent={{text: 'Shifts', style: {color: '#ffff', fontSize: 24}}}
                     containerStyle={{
                         backgroundColor: '#007AFF'
                     }}
                     rightComponent={
                         <Button
                             onPress={() => this.toggleModal()}
-                            icon={{ name: 'add', color: 'white' }}
-                            type='clear'
+                            icon={{name: 'add', color: 'white'}}
+                            type="clear"
                         />
                     }
                     leftComponent={
                         <Button
                             onPress={() => this.onPressBack()}
-                            icon={{ name: 'chevron-left', color: 'white', size: 30 }}
-                            type='clear'
+                            icon={{name: 'chevron-left', color: 'white', size: 30}}
+                            type="clear"
                         />
                     }
                 />
@@ -137,8 +142,8 @@ class AddShiftScreen extends Component {
                     onPickerCancel={this.toggleModal}
                     handleTimePicked={this.handleTimePicked}
                 />
-                <View style={{ flex: 1 }}>
-                    <ScrollView style={{ flex: 1, marginBottom: 60 }}>
+                <View style={{flex: 1}}>
+                    <ScrollView style={{flex: 1, marginBottom: 60}}>
                         <ShiftList
                             shiftList={this.props.shift}
                             onPressDelete={this.onPressDelete}
@@ -146,12 +151,12 @@ class AddShiftScreen extends Component {
                         />
                     </ScrollView>
                 </View>
-                <View style={{ position: 'absolute', bottom: 10, right: 0, left: 0 }}>
+                <View style={{position: 'absolute', bottom: 10, right: 0, left: 0}}>
                     <Button
-                        title='Save Changes'
+                        title="Save Changes"
                         onPress={() => this.saveShift()}
-                        icon={{ name: 'save', color: 'white' }}
-                        buttonStyle={{ margin: 10 }}
+                        icon={{name: 'save', color: 'white'}}
+                        buttonStyle={{margin: 10}}
                     />
                 </View>
             </View>
@@ -160,11 +165,11 @@ class AddShiftScreen extends Component {
 }
 
 const mapStateToProps = state => {
-    const { name, lastName, phone, shift, avatar,uniqueKey} = state.employeeForm;
-    return { shift, name, lastName, phone, avatar, uniqueKey };
+    const {name, lastName, phone, shift, avatar, uniqueKey} = state.employeeForm;
+    return {shift, name, lastName, phone, avatar, uniqueKey};
 };
 
 export default connect(
     mapStateToProps,
-    { addShift, loadShifts, prepShiftString, employeeSave, deleteShift }
+    {addShift, loadShifts, prepShiftString, employeeSave, deleteShift}
 )(AddShiftScreen);
