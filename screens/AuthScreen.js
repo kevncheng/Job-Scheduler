@@ -19,10 +19,10 @@ class AuthScreen extends Component {
             firebase
                 .auth()
                 .signInAndRetrieveDataWithCredential(credential)
-                .then(this.props.navigation.navigate('home'))
+                .then(this.props.navigation.navigate('loading'))
                 .catch(error => alert(error));
         } else if (type === 'cancel') {
-            alert('Facebook Log In Cancelled');
+            alert('Facebook log in cancelled.');
         }
     };
 

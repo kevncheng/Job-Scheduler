@@ -6,7 +6,7 @@ import _ from 'lodash';
 class AppLoadingScreen extends Component {
     componentDidMount = () => {
       firebase.auth().onAuthStateChanged(user => {
-          this.props.navigation.navigate(user? 'main' : 'auth')
+          this.props.navigation.navigate(user? 'home' : 'auth')
       })
     };
     
